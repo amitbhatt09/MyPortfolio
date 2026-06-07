@@ -1,26 +1,164 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* ── THEME CSS VARIABLES ── */
+@layer base {
+  /* LIGHT THEME (default — no .dark class) */
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg-base: #f1f5f9;
+    --bg-secondary: #e2e8f0;
+    --text-base: #0f172a;
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-strong-bg: rgba(255, 255, 255, 0.92);
+    --glass-strong-border: rgba(0, 0, 0, 0.12);
+    --hero-gradient: linear-gradient(135deg, #f1f5f9 0%, #eef2ff 60%, #e0f2fe 100%);
+    --nav-scrolled-bg: rgba(241, 245, 249, 0.95);
+    --nav-mobile-bg: rgba(241, 245, 249, 0.98);
+    --scrollbar-track: #e2e8f0;
+    --radius: 0.75rem;
+  }
+
+  /* DARK THEME */
+  .dark {
+    --bg-base: #020817;
+    --bg-secondary: #0a0f1e;
+    --text-base: #f1f5f9;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-strong-bg: rgba(255, 255, 255, 0.06);
+    --glass-strong-border: rgba(255, 255, 255, 0.10);
+    --hero-gradient: linear-gradient(135deg, #020817 0%, #0a0f1e 60%, #020817 100%);
+    --nav-scrolled-bg: rgba(5, 10, 25, 0.95);
+    --nav-mobile-bg: rgba(5, 10, 25, 0.97);
+    --scrollbar-track: #020817;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--bg-base);
+    color: var(--text-base);
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #a855f7, #3b82f6);
+    border-radius: 3px;
+  }
+  ::selection {
+    background: rgba(168, 85, 247, 0.3);
+    color: #fff;
+  }
 }
+
+@layer utilities {
+  /* ── GLASSMORPHISM (theme-aware) ── */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+  }
+  .glass-strong {
+    background: var(--glass-strong-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-strong-border);
+  }
+
+  /* ── GRADIENT TEXT ── */
+  .gradient-text {
+    background: linear-gradient(135deg, #a855f7 0%, #3b82f6 50%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .gradient-text-white {
+    background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── SECTION PADDING ── */
+  .section-padding {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+  @media (min-width: 768px) {
+    .section-padding { padding-top: 7rem; padding-bottom: 7rem; }
+  }
+
+  /* ── CONTAINER ── */
+  .container-custom {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES
+   (applied when .dark class is NOT on <html>)
+═══════════════════════════════════════════════════ */
+
+/* Headings */
+html:not(.dark) h1,
+html:not(.dark) h2,
+html:not(.dark) h3,
+html:not(.dark) h4 {
+  color: #0f172a;
+}
+
+/* text-white on non-interactive elements → dark text */
+html:not(.dark) span.text-white,
+html:not(.dark) p.text-white,
+html:not(.dark) div.text-white,
+html:not(.dark) li.text-white,
+html:not(.dark) label.text-white {
+  color: #0f172a !important;
+}
+
+/* Muted text — lighten slightly for light bg */
+html:not(.dark) .text-slate-300 { color: #334155 !important; }
+html:not(.dark) .text-slate-400 { color: #475569 !important; }
+html:not(.dark) .text-slate-500 { color: #64748b !important; }
+html:not(.dark) .text-slate-600 { color: #475569 !important; }
+html:not(.dark) .text-slate-700 { color: #334155 !important; }
+
+/* font-mono code text */
+html:not(.dark) .font-mono { color: #1e293b; }
+
+/* Borders: white-alpha borders become dark-alpha on light bg */
+html:not(.dark) .border-white\/5  { border-color: rgba(0,0,0,0.07) !important; }
+html:not(.dark) .border-white\/8  { border-color: rgba(0,0,0,0.09) !important; }
+html:not(.dark) .border-white\/10 { border-color: rgba(0,0,0,0.10) !important; }
+html:not(.dark) .border-white\/15 { border-color: rgba(0,0,0,0.12) !important; }
+
+/* Skill-bar track */
+html:not(.dark) .bg-slate-800 { background: #cbd5e1 !important; }
+
+/* Input / Textarea / Select text */
+html:not(.dark) input,
+html:not(.dark) textarea,
+html:not(.dark) select {
+  color: #0f172a !important;
+}
+html:not(.dark) ::placeholder { color: #94a3b8 !important; }
+
+/* Section ambient glow divs — reduce opacity for light bg */
+html:not(.dark) .section-glow { opacity: 0.04 !important; }
+
