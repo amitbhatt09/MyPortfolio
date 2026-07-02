@@ -205,8 +205,8 @@ export default function Hero() {
               </motion.a>
 
               <motion.a
-                href="/resume.pdf"
-                download
+                href="/AmitBhatt_Resume.pdf"
+                download="AmitBhatt_Resume.pdf"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-slate-300 text-sm hover:text-white transition-colors"
